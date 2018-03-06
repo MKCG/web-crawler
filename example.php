@@ -52,10 +52,14 @@ $mink->setDefaultSessionName('default');
     ->onEvent(Crawler::EVENT_URL_VISITED, function (string $url, Session $session) {
         try {
             $screenshot = $session->getScreenshot();
-            echo "SCREENSHOT\n";
         } catch (UnsupportedDriverActionException $e) {
             return;
         }
+
+        $filepath = '/tmp/' . uniqid() . '.png';
+
+        file_put_contents($filepath, $screenshot);
+        echo "SCREENSHOT $filepath\n";
     })
     ->onEvent(Crawler::EVENT_PAGE_RETRIEVED, function (DocumentElement $page) {
         foreach ($page->findAll('css', 'link') as $link) {
